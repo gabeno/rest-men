@@ -6,6 +6,7 @@ import * as dotenv from "dotenv";
 import express from "express";
 import http from "http";
 import mongoose from "mongoose";
+import router from "./router";
 
 const app = express();
 dotenv.config();
@@ -28,3 +29,5 @@ mongoose.connect(process.env.MONGO_URL);
 mongoose.connection.on("error", (err: Error) => {
   console.log(`Error: ${err}`);
 });
+
+app.use("/", router());
