@@ -1,6 +1,6 @@
 import express from "express";
 import { createUser, getUserByEmail } from "../db/users";
-import { authentication, random } from "../helpers";
+import { makeHash, random } from "../helpers";
 
 export const login = async (req: express.Request, res: express.Response) => {
   try {
@@ -16,14 +16,14 @@ export const login = async (req: express.Request, res: express.Response) => {
       return res.sendStatus(400);
     }
 
-    const expectedHash = authentication(user.authentication.salt, password);
+    const expectedHash = makeHash(user.authentication.salt, password);
 
     if (user.authentication.password !== expectedHash) {
       return res.sendStatus(403);
     }
 
     const salt = random();
-    user.authentication.sessionToken = authentication(salt, user._id.toString());
+    user.authentication.sessionToken = makeHash(salt, user._id.toString());
     await user.save();
     res.cookie("REST-MEN-AUTH", user.authentication.sessionToken, { domain: "localhost", path: "/" });
 
@@ -54,7 +54,7 @@ export const register = async (req: express.Request, res: express.Response) => {
       username,
       authentication: {
         salt,
-        password: authentication(salt, password),
+        password: makeHash(salt, password),
       },
     });
 
