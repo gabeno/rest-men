@@ -1,6 +1,11 @@
-import crypto from "crypto";
+import bcrypt from "bcrypt";
 
-export const random = () => crypto.randomBytes(128).toString("base64");
-export const makeHash = (salt: string, password: string) => {
-  return crypto.createHmac("sha256", [salt, password].join("/")).update(process.env.APP_SECRET).digest("hex");
+const saltRounds = Number(process.env.SALT_ROUNDS);
+
+export const random = () => bcrypt.genSalt(saltRounds);
+export const makeHash = (secret: string) => {
+  return bcrypt.hashSync(secret, saltRounds);
+};
+export const matchPassWord = async (password: string) => {
+  return await bcrypt.compare(password, password);
 };

@@ -1,6 +1,6 @@
 import express from "express";
 import { createUser, getUserByEmail } from "../db/users";
-import { makeHash, random } from "../helpers";
+import { makeHash, matchPassWord } from "../helpers";
 
 export const login = async (req: express.Request, res: express.Response) => {
   try {
@@ -10,20 +10,19 @@ export const login = async (req: express.Request, res: express.Response) => {
       return res.sendStatus(400);
     }
 
-    const user = await getUserByEmail(email).select("+authentication.salt +authentication.password");
+    const user = await getUserByEmail(email).select("+authentication.password");
 
     if (!user) {
       return res.sendStatus(400);
     }
 
-    const expectedHash = makeHash(user.authentication.salt, password);
+    const passwordMatch = matchPassWord(user.authentication.password);
 
-    if (user.authentication.password !== expectedHash) {
+    if (!passwordMatch) {
       return res.sendStatus(403);
     }
 
-    const salt = random();
-    user.authentication.sessionToken = makeHash(salt, user._id.toString());
+    user.authentication.sessionToken = makeHash(user._id.toString());
     await user.save();
     res.cookie("REST-MEN-AUTH", user.authentication.sessionToken, { domain: "localhost", path: "/" });
 
@@ -48,13 +47,11 @@ export const register = async (req: express.Request, res: express.Response) => {
       return res.sendStatus(400);
     }
 
-    const salt = random();
     const user = await createUser({
       email,
       username,
       authentication: {
-        salt,
-        password: makeHash(salt, password),
+        password: makeHash(password),
       },
     });
 
