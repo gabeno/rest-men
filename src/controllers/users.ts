@@ -1,6 +1,6 @@
 import express from "express";
 import { StatusCodes } from "http-status-codes";
-import { deleteUserById, getUserById, getUsers } from "../db/users";
+import { deleteUserById, getUserById, getUsers } from "../models/user";
 
 export const deleteUser = async (req: express.Request, res: express.Response) => {
   try {

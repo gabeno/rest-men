@@ -1,7 +1,7 @@
 import express from "express";
 import { StatusCodes } from "http-status-codes";
-import { createUser, getUserByEmail } from "../db/users";
 import { makeHash, matchPassWord } from "../helpers";
+import { createUser, getUserByEmail } from "../models/user";
 
 export const login = async (req: express.Request, res: express.Response) => {
   try {
