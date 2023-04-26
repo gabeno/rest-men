@@ -9,8 +9,15 @@ import router from "./router";
 import { connectDb } from "./utils";
 
 dotenv.config();
-const app = express();
 
+if (!process.env.PORT) {
+  console.log(`port not specified`);
+  process.exit(1);
+}
+
+const port: number = parseInt(process.env.PORT, 10)
+
+const app = express();
 app.use(cors({
   credentials: true,
 }))
@@ -20,8 +27,8 @@ app.use(bodyParser.json());
 app.use("/", router());
 
 const server = http.createServer(app);
-server.listen(8080, () => {
-  console.log("Server running on http://localhost:8080/");
+server.listen(port, () => {
+  console.log(`Server running on http://localhost:${port}/`);
 
   connectDb();
 });
