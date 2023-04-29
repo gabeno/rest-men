@@ -33,3 +33,11 @@ Enables more control on what origin our api can be called from. `cors` middlewar
 
 See:
 - https://www.section.io/engineering-education/how-to-use-cors-in-nodejs-with-express/
+
+
+##### Further work
+
+- Add tests with jest: [article 1](https://codingpr.com/test-your-express-api-with-jest/), [article 2](https://www.freecodecamp.org/news/how-to-test-in-express-and-mongoose-apps/), [video 1](https://www.youtube.com/watch?v=vDLE8hqzA8I)
+- Dockerize app
+- Use [prisma](https://www.prisma.io/) and adopt DI for database provider
+- Organize app better - [controller](https://www.youtube.com/watch?v=PM58NEMJgMw), routes and service + folder structure, typing and [validation](https://www.youtube.com/watch?v=BWUi6BS9T5Y) improvement
